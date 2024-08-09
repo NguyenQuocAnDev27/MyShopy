@@ -8,6 +8,7 @@ const userActive = require('./user_active.png');
 const userInactive = require('./user_inactive.png');
 const videoActive = require('./video_active.png');
 const videoInactive = require('./video_inactive.png');
+const missingPart = require('./missing_part.png');
 
 export {
   likeInactive,
@@ -20,4 +21,5 @@ export {
   userInactive,
   videoActive,
   videoInactive,
+  missingPart,
 };

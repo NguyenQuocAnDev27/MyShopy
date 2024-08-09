@@ -3,7 +3,7 @@ import * as Keychain from 'react-native-keychain';
 // Dictionary to store key names
 const SecureKeys = {
   USERNAME: 'username',
-  PASSWORD: 'password',
+  PASSWORDHASH: 'passwordhash',
   TOKEN: 'token',
   // Add other keys as needed
 };

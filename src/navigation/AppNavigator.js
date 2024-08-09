@@ -11,12 +11,15 @@ import {
   notificationInactive,
   userActive,
   userInactive,
+  missingPart,
 } from '../assets/icons';
+import LoginScreen from '../screens/LoginScreen/LoginScreen';
 
 const Tab = createBottomTabNavigator();
 
 const SCREEN_NAME = {
   Home: 'Home',
+  Login: 'Login',
   ProductDetail: 'ProductDetail',
 };
 
@@ -27,6 +30,8 @@ const TabBarIcon = ({route, focused}) => {
     icon = focused ? liveActive : likeInactive;
   } else if (route.name === SCREEN_NAME.ProductDetail) {
     icon = focused ? notificationActive : notificationInactive;
+  } else {
+    icon = missingPart;
   }
   return <Image source={icon} style={styles.icon} />;
 };
@@ -42,18 +47,22 @@ const screenOptions = ({route}) => ({
 const AppNavigator = () => {
   return (
     <NavigationContainer>
-      <Tab.Navigator screenOptions={screenOptions}>
+      <Tab.Navigator
+        initialRouteName={SCREEN_NAME.Login}
+        screenOptions={screenOptions}>
         <Tab.Screen name={SCREEN_NAME.Home} component={HomeScreen} />
         <Tab.Screen
           name={SCREEN_NAME.ProductDetail}
           component={ProductDetailScreen}
         />
+        <Tab.Screen name={SCREEN_NAME.Login} component={LoginScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );
 };
 
 export default AppNavigator;
+export {SCREEN_NAME};
 
 const styles = StyleSheet.create({
   icon: {
