@@ -9,6 +9,15 @@ const userInactive = require('./user_inactive.png');
 const videoActive = require('./video_active.png');
 const videoInactive = require('./video_inactive.png');
 const missingPart = require('./missing_part.png');
+const password = require('./lock_96px.png');
+const password2 = require('./lock_500px.png');
+const user = require('./account_500px.png');
+const password_focus = require('./lock_500px_focus.png');
+const user_focus = require('./account_500px_focus.png');
+const sms = require('./chat_message_sent_480px.png');
+const google = require('./google_512px.png');
+const facebook = require('./Facebook_512px.png');
+const appleid = require('./apple_logo_208px.png');
 
 export {
   likeInactive,
@@ -22,4 +31,13 @@ export {
   videoActive,
   videoInactive,
   missingPart,
+  password,
+  password2,
+  user,
+  sms,
+  facebook,
+  google,
+  appleid,
+  password_focus,
+  user_focus,
 };

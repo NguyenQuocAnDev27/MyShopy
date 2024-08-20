@@ -3,9 +3,13 @@ const colors = {
   secondary: '#FF9800', // Example secondary color
   accent: '#FFC107', // Example accent color
   background: '#FFFFFF', // Example background color
-  surface: '#F5F5F5', // Example surface color
+  surface: '#fff', // Example surface color
+  surface2: '#EFEFEF',
   textPrimary: '#212121', // Example primary text color
   textSecondary: '#757575', // Example secondary text color
+  text3: '#1E3460',
+  text4: '#0F1E3C',
+  not_focus: '#4A5771',
   error: '#F44336', // Example error color
   success: '#4CAF50', // Example success color
   warning: '#FFEB3B', // Example warning color

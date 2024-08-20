@@ -89,6 +89,24 @@ const fontSettings = {
       fontFamily: 'Montserrat-Bold',
     },
   },
+  h6: {
+    regular: {
+      fontSize: 15,
+      fontWeight: '400',
+      fontFamily: 'Montserrat-Regular',
+    },
+    italic: {
+      fontSize: 15,
+      fontWeight: '400',
+      fontStyle: 'italic',
+      fontFamily: 'Montserrat-Italic',
+    },
+    bold: {
+      fontSize: 15,
+      fontWeight: '700',
+      fontFamily: 'Montserrat-Bold',
+    },
+  },
 };
 
 export default fontSettings;
