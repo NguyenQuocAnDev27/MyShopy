@@ -100,39 +100,46 @@ const InputInfoLoginFieldContainer = ({navigation}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  async function fakeFetchAPILogin(input_user, input_pw) {
-    if (input_user === 'Admin' && input_pw === '999') {
-      await setTimeout(() => {
-        console.log('-', input_user, input_pw, 'access app');
-        return {
-          Status: true,
-          Message: 'Đăng nhập thành công',
-          Exception: null,
-          Data: {
-            User: 'Admin',
-            JWTToken: 'this_is_token',
-          },
-        };
-      }, 3000);
-    } else {
-      await setTimeout(() => {
-        console.log('-', input_user, input_pw, 'access app');
-        return {
-          Status: false,
-          Message: null,
-          Exception: {
-            Code: 100,
-            Message: 'Sai tài khoản hoặc mật khẩu',
-          },
-          Data: null,
-        };
-      }, 3000);
-    }
-  }
+  const fakeFetchAPILogin_v2 = ({input_user, input_pw}) => {
+    return new Promise((resolve, reject) => {
+      if (input_user === 'Admin' && input_pw === '999') {
+        setTimeout(() => {
+          console.log('-', input_user, input_pw, 'access app');
+          resolve({
+            Status: true,
+            Message: 'Đăng nhập thành công',
+            Exception: null,
+            Data: {
+              User: 'Admin',
+              JWTToken: 'this_is_token',
+            },
+          });
+        }, 3000);
+      } else {
+        setTimeout(() => {
+          console.log('-', input_user, input_pw, 'access app');
+          reject({
+            Status: false,
+            Message: null,
+            Exception: {
+              Code: 100,
+              Message: 'Sai tài khoản hoặc mật khẩu',
+            },
+            Data: null,
+          });
+        }, 3000);
+      }
+    });
+  };
 
   const CheckLogin = async (input_user, input_pw) => {
     // Call API here
-    const res = await fakeFetchAPILogin(input_user, input_pw);
+    const res = await fakeFetchAPILogin_v2({
+      input_user: input_user,
+      input_pw: input_pw,
+    });
+
+    // Check status
     if (res?.Status === false || res?.Message === null) {
       // Message error
       return;

@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {Image, StyleSheet} from 'react-native';
 import HomeScreen from '../screens/Home/HomeScreen';
-import ProductDetailScreen from '../screens/Product/ProductDetailScreen';
 import {
   likeInactive,
   liveActive,
@@ -13,30 +11,60 @@ import {
   userActive,
   userInactive,
   missingPart,
+  shoppingBagActive,
+  shoppingBagInactive,
+  videoActive,
+  videoInactive,
 } from '../assets/icons';
 import LoginScreen from '../screens/LoginScreen/LoginScreen';
 import {createStackNavigator} from '@react-navigation/stack';
+import MailScreen from '../screens/MailScreen/MailScreen';
+import VideoScreen from '../screens/VideoScreen/VideoScreen';
+import UserExtensionsScreen from '../screens/UserExtensionsScreen/UserExtensionsScreen';
+import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
 const SCREEN_NAME = {
-  Home: 'Home',
+  Home: 'Gợi ý',
   HomeTabs: 'HomeTabs',
   Login: 'Login',
   ProductDetail: 'ProductDetail',
+  Mail: 'Mail',
+  Video: 'Live & Video',
+  UserExtensions: 'Tôi',
+  Notifications: 'Thông báo',
 };
 
 // TabBarIcon Component
 const TabBarIcon = ({route, focused}) => {
   let icon;
-  if (route.name === SCREEN_NAME.Home) {
-    icon = focused ? liveActive : likeInactive;
-  } else if (route.name === SCREEN_NAME.ProductDetail) {
-    icon = focused ? notificationActive : notificationInactive;
-  } else {
-    icon = missingPart;
+
+  switch (route.name) {
+    case SCREEN_NAME.Home:
+      icon = focused ? liveActive : likeInactive;
+      break;
+    case SCREEN_NAME.ProductDetail:
+      icon = focused ? notificationActive : notificationInactive;
+      break;
+    case SCREEN_NAME.Mail:
+      icon = focused ? shoppingBagActive : shoppingBagInactive;
+      break;
+    case SCREEN_NAME.Video:
+      icon = focused ? videoActive : videoInactive;
+      break;
+    case SCREEN_NAME.UserExtensions:
+      icon = focused ? userActive : userInactive;
+      break;
+    case SCREEN_NAME.Notifications:
+      icon = focused ? notificationActive : notificationInactive;
+      break;
+    default:
+      icon = missingPart;
+      break;
   }
+
   return <Image source={icon} style={styles.icon} />;
 };
 
@@ -54,9 +82,15 @@ const HomeTabs = () => {
       initialRouteName={SCREEN_NAME.Login}
       screenOptions={screenOptions}>
       <Tab.Screen name={SCREEN_NAME.Home} component={HomeScreen} />
+      <Tab.Screen name={SCREEN_NAME.Mail} component={MailScreen} />
+      <Tab.Screen name={SCREEN_NAME.Video} component={VideoScreen} />
       <Tab.Screen
-        name={SCREEN_NAME.ProductDetail}
-        component={ProductDetailScreen}
+        name={SCREEN_NAME.Notifications}
+        component={NotificationsScreen}
+      />
+      <Tab.Screen
+        name={SCREEN_NAME.UserExtensions}
+        component={UserExtensionsScreen}
       />
     </Tab.Navigator>
   );
@@ -69,7 +103,11 @@ const AppNavigator = () => {
         initialRouteName={SCREEN_NAME.Login}
         screenOptions={screenOptions}>
         <Stack.Screen name={SCREEN_NAME.HomeTabs} component={HomeTabs} />
-        <Stack.Screen name={SCREEN_NAME.Login} component={LoginScreen} />
+        <Stack.Screen
+          name={SCREEN_NAME.Login}
+          component={LoginScreen}
+          options={{headerBackVisible: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
