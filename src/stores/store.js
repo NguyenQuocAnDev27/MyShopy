@@ -3,6 +3,7 @@ import {persist} from 'zustand/middleware';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {createAuthSlice} from './slices/authSlice';
 import {createProductSlice} from './slices/productSlice';
+import {createStateScreensSlice} from './slices/stateScreensSlice';
 import {name as appName} from '../../app.json';
 
 const useStore = create(
@@ -10,6 +11,7 @@ const useStore = create(
     (set, get) => ({
       ...createAuthSlice(set, get),
       ...createProductSlice(set, get),
+      ...createStateScreensSlice(set, get),
     }),
     {
       name: appName + 'Store', // Unique name for the storage

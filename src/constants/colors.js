@@ -1,5 +1,6 @@
 const colors = {
   primary: '#FF5722', // Example primary color (Shopee Orange)
+  darkOrange: '#B2461F',
   secondary: '#FF9800', // Example secondary color
   accent: '#FFC107', // Example accent color
   background: '#FFFFFF', // Example background color
@@ -15,6 +16,8 @@ const colors = {
   warning: '#FFEB3B', // Example warning color
   info: '#2196F3', // Example info color
   border: '#E0E0E0', // Example border color
+  white: '#FFFFFF',
+  transparentBlack: '#00000026',
 };
 
 export default colors;

@@ -22,6 +22,8 @@ import MailScreen from '../screens/MailScreen/MailScreen';
 import VideoScreen from '../screens/VideoScreen/VideoScreen';
 import UserExtensionsScreen from '../screens/UserExtensionsScreen/UserExtensionsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
+import SplashScreen from '../components/common/SplashScreen';
+import useStore from '../stores/store';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,6 +37,7 @@ const SCREEN_NAME = {
   Video: 'Live & Video',
   UserExtensions: 'Tôi',
   Notifications: 'Thông báo',
+  Splash: 'Splash',
 };
 
 // TabBarIcon Component
@@ -96,17 +99,26 @@ const HomeTabs = () => {
   );
 };
 
+const forFade = ({current}) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
+
 const AppNavigator = () => {
+  // const isLoading = useStore(state => state.isLoading);
+  // const toggleLoading = useStore(state => state.toggleLoading);
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={SCREEN_NAME.Login}
+        initialRouteName={SCREEN_NAME.Splash}
         screenOptions={screenOptions}>
+        <Stack.Screen name={SCREEN_NAME.Splash} component={SplashScreen} />
         <Stack.Screen name={SCREEN_NAME.HomeTabs} component={HomeTabs} />
         <Stack.Screen
           name={SCREEN_NAME.Login}
           component={LoginScreen}
-          options={{headerBackVisible: false}}
+          options={{headerBackVisible: false, cardStyleInterpolator: forFade}}
         />
       </Stack.Navigator>
     </NavigationContainer>

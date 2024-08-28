@@ -28,6 +28,9 @@ import fontSettings from '../../assets/fonts/fontSettings';
 import colors from '../../constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {SCREEN_NAME} from '../../navigation/AppNavigator';
+import LoadingScreen from '../../components/common/LoadingScreen';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import MessageFullSreen from '../../components/common/MessageFullSreen';
 
 const LogoContainer = ({
   assetPath = missingPart,
@@ -96,7 +99,7 @@ const CustomTextInput = ({assetPath, assetPathFocus, ...props}) => {
   );
 };
 
-const InputInfoLoginFieldContainer = ({navigation}) => {
+const InputInfoLoginFieldContainer = ({navigation, funtions = null}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -123,7 +126,7 @@ const InputInfoLoginFieldContainer = ({navigation}) => {
             Message: null,
             Exception: {
               Code: 100,
-              Message: 'Sai tài khoản hoặc mật khẩu',
+              Error: 'Sai tài khoản hoặc mật khẩu',
             },
             Data: null,
           });
@@ -133,15 +136,32 @@ const InputInfoLoginFieldContainer = ({navigation}) => {
   };
 
   const CheckLogin = async (input_user, input_pw) => {
+    if (funtions != null) {
+      funtions.toggleLoading();
+    }
+
     // Call API here
     const res = await fakeFetchAPILogin_v2({
       input_user: input_user,
       input_pw: input_pw,
-    });
+    })
+      .then(response => {
+        console.log('Login Success:', response);
+        return response;
+      })
+      .catch(error => {
+        console.log('Login Failed:', error);
+        return error;
+      });
 
     // Check status
     if (res?.Status === false || res?.Message === null) {
       // Message error
+
+      // Turn off Loading screen
+      if (funtions != null) {
+        funtions.toggleLoading();
+      }
       return;
     }
 
@@ -337,6 +357,12 @@ const styles_ExtraLoginMethodsContainer = StyleSheet.create({
 });
 
 const LoginScreen = ({navigation}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(true);
+  function toggleLoading() {
+    setIsLoading(preValue => !preValue);
+  }
+
   // const {products, fetchProducts} = useStoreContext();
 
   // useEffect(() => {
@@ -347,17 +373,37 @@ const LoginScreen = ({navigation}) => {
     'Enter email/phone number/name user',
   );
 
+  const funtions = {
+    toggleLoading: toggleLoading,
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ĐĂNG NHẬP</Text>
-      <View>
-        <View style={styles.logo_container}>
-          <Image source={app_logo} style={styles.app_logo} />
+    <SafeAreaProvider>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <View style={styles.container}>
+          {showMessage && (
+            <MessageFullSreen
+              onPressMessage={() => {
+                setShowMessage(false);
+              }}
+            />
+          )}
+          <Text style={styles.title}>ĐĂNG NHẬP</Text>
+          <View>
+            <View style={styles.logo_container}>
+              <Image source={app_logo} style={styles.app_logo} />
+            </View>
+            <InputInfoLoginFieldContainer
+              navigation={navigation}
+              funtions={funtions}
+            />
+            <ExtraLoginMethodsContainer navigation={navigation} />
+          </View>
         </View>
-        <InputInfoLoginFieldContainer navigation={navigation} />
-        <ExtraLoginMethodsContainer navigation={navigation} />
-      </View>
-    </View>
+      )}
+    </SafeAreaProvider>
   );
 };
 
