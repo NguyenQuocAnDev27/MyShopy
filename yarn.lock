@@ -2820,7 +2820,7 @@ cliui@^6.0.0:
 
 cliui@^7.0.2:
   version "7.0.4"
-  resolved "https://registry.npmjs.org/cliui/-/cliui-7.0.4.tgz"
+  resolved "https://registry.yarnpkg.com/cliui/-/cliui-7.0.4.tgz#a0265ee655476fc807aea9df3df8df7783808b4f"
   integrity sha512-OcRE68cOsVMXp1Yvonl/fzkQOyjLSu/8bhPDfQt0e0/Eb283TKP20Fs2MqoPsr9SwA595rRCA+QMzYc9nBP+JQ==
   dependencies:
     string-width "^4.2.0"
@@ -3752,7 +3752,7 @@ fs.realpath@^1.0.0:
 
 fsevents@^2.3.2:
   version "2.3.3"
-  resolved "https://registry.npmjs.org/fsevents/-/fsevents-2.3.3.tgz"
+  resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.3.3.tgz#cac6407785d03675a2a5e1a5305c697b347d90d6"
   integrity sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==
 
 function-bind@^1.1.2:
@@ -5314,32 +5314,6 @@ ms@2.1.3:
   resolved "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz"
   integrity sha512-6FlzubTLZG3J2a/NVCAleEhjzq5oxgHyaCU9yYXvcLsvoVaHJq/s5xXI6/XXP6tz7R9xAOtHnSO/tXtF3WRTlA==
 
-"myShopy@file:.":
-  version "0.0.1"
-  dependencies:
-    "@react-native-async-storage/async-storage" "^1.24.0"
-    "@react-navigation/bottom-tabs" "^6.6.0"
-    "@react-navigation/native" "^6.1.17"
-    "@react-navigation/stack" "^6.3.29"
-    "@reduxjs/toolkit" "^2.2.5"
-    "@tanstack/react-query" "^5.45.1"
-    myShopy "file:C:/Users/yanyu/AppData/Local/Yarn/Cache/v6/npm-my-hopy-0.0.1-00e2a70c-4729-4ce9-a94c-3549c8b06e0f-1724211935870/node_modules/myShopy"
-    react "18.2.0"
-    react-native "0.74.2"
-    react-native-gesture-handler "^2.17.1"
-    react-native-keychain "^8.2.0"
-    react-native-linear-gradient "^2.8.3"
-    react-native-reanimated "^3.12.1"
-    react-native-safe-area-context "^4.10.5"
-    react-native-screens "^3.32.0"
-    react-native-vector-icons "^10.1.0"
-    react-redux "^9.1.2"
-    redux "^5.0.1"
-    redux-logger "^3.0.6"
-    redux-thunk "^3.1.0"
-    yarn "^1.22.22"
-    zustand "^4.5.2"
-
 nanoid@^3.1.23:
   version "3.3.7"
   resolved "https://registry.npmjs.org/nanoid/-/nanoid-3.3.7.tgz"
@@ -5849,12 +5823,12 @@ react-native-gesture-handler@^2.17.1:
 
 react-native-keychain@^8.2.0:
   version "8.2.0"
-  resolved "https://registry.npmjs.org/react-native-keychain/-/react-native-keychain-8.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-keychain/-/react-native-keychain-8.2.0.tgz#aea82df37aacbb04f8b567a8e0e6d7292025610a"
   integrity sha512-SkRtd9McIl1Ss2XSWNLorG+KMEbgeVqX+gV+t3u1EAAqT8q2/OpRmRbxpneT2vnb/dMhiU7g6K/pf3nxLUXRvA==
 
 react-native-linear-gradient@^2.8.3:
   version "2.8.3"
-  resolved "https://registry.npmjs.org/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-linear-gradient/-/react-native-linear-gradient-2.8.3.tgz#9a116649f86d74747304ee13db325e20b21e564f"
   integrity sha512-KflAXZcEg54PXkLyflaSZQ3PJp4uC4whM7nT/Uot9m0e/qxFV3p6uor1983D1YOBJbJN7rrWdqIjq0T42jOJyA==
 
 react-native-reanimated@^3.12.1:
@@ -5886,7 +5860,7 @@ react-native-screens@^3.32.0:
 
 react-native-vector-icons@^10.1.0:
   version "10.1.0"
-  resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz"
+  resolved "https://registry.yarnpkg.com/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz#c98a225213700177d23492e32d1dc920b9bae8aa"
   integrity sha512-fdQjCHIdoXmRoTZ5gvN1FmT4sGLQ2wmQiNZHKJQUYnE2tkIwjGnxNch+6Nd4lHAACvMWO7LOzBNot2u/zlOmkw==
   dependencies:
     prop-types "^15.7.2"
@@ -7082,7 +7056,7 @@ yargs-parser@^18.1.2:
 
 yargs-parser@^20.2.2:
   version "20.2.9"
-  resolved "https://registry.npmjs.org/yargs-parser/-/yargs-parser-20.2.9.tgz"
+  resolved "https://registry.yarnpkg.com/yargs-parser/-/yargs-parser-20.2.9.tgz#2eb7dc3b0289718fc295f362753845c41a0c94ee"
   integrity sha512-y11nGElTIV+CT3Zv9t7VKl+Q3hTQoT9a1Qzezhhl6Rp21gJ/IVTW7Z3y9EWXhuUBC2Shnf+DX0antecpAwSP8w==
 
 yargs-parser@^21.1.1:
@@ -7109,7 +7083,7 @@ yargs@^15.1.0:
 
 yargs@^16.1.1:
   version "16.2.0"
-  resolved "https://registry.npmjs.org/yargs/-/yargs-16.2.0.tgz"
+  resolved "https://registry.yarnpkg.com/yargs/-/yargs-16.2.0.tgz#1c82bf0f6b6a66eafce7ef30e376f49a12477f66"
   integrity sha512-D1mvvtDG0L5ft/jGWkLpG1+m0eQxOfaBvTNELraWj22wSVUMWxZUvYgJYcKh6jGGIkJFhH4IZPQhR4TKpc8mBw==
   dependencies:
     cliui "^7.0.2"
