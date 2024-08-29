@@ -107,6 +107,60 @@ const fontSettings = {
       fontFamily: 'Montserrat-Bold',
     },
   },
+  h7: {
+    regular: {
+      fontSize: 12,
+      fontWeight: '400',
+      fontFamily: 'Montserrat-Regular',
+    },
+    italic: {
+      fontSize: 12,
+      fontWeight: '400',
+      fontStyle: 'italic',
+      fontFamily: 'Montserrat-Italic',
+    },
+    bold: {
+      fontSize: 12,
+      fontWeight: '700',
+      fontFamily: 'Montserrat-Bold',
+    },
+  },
+  h7_5: {
+    regular: {
+      fontSize: 10,
+      fontWeight: '400',
+      fontFamily: 'Montserrat-Regular',
+    },
+    italic: {
+      fontSize: 10,
+      fontWeight: '400',
+      fontStyle: 'italic',
+      fontFamily: 'Montserrat-Italic',
+    },
+    bold: {
+      fontSize: 10,
+      fontWeight: '700',
+      fontFamily: 'Montserrat-Bold',
+    },
+  },
+  h8: {
+    regular: {
+      fontSize: 8,
+      fontWeight: '400',
+      fontFamily: 'Montserrat-Regular',
+    },
+    italic: {
+      fontSize: 8,
+      fontWeight: '400',
+      fontStyle: 'italic',
+      fontFamily: 'Montserrat-Italic',
+    },
+    bold: {
+      fontSize: 8,
+      fontWeight: '700',
+      fontFamily: 'Montserrat-Bold',
+    },
+  },
 };
 
 export default fontSettings;

@@ -15,6 +15,9 @@ import fontSettings from '../../assets/fonts/fontSettings';
 import {ReText} from 'react-native-redash';
 import {Animated as reactAnimated} from 'react-native';
 import {SCREEN_NAME} from '../../navigation/AppNavigator';
+import {getItem} from '../../services/SecureInfo';
+import {KEY_SECURE} from '../../services/SecureInfo';
+import useStore from '../../stores/store';
 
 const {width, height} = Dimensions.get('screen');
 const statusBarHeight = StatusBar.currentHeight;
@@ -58,56 +61,49 @@ const AnimatedReText = ({text, delaytime = 3000}) => {
 const SplashScreen = ({disableProgressText = false, navigation}) => {
   const progress = useSharedValue(0);
   const scale = useRef(new reactAnimated.Value(1)).current;
+  const getUserLocalData = useStore(state => state.getUserLocalData);
 
   useEffect(() => {
-    progress.value = withTiming(1, {duration: 3000});
+    const initialize = async () => {
+      const {user, token} = await getUserLocalData();
 
-    setTimeout(() => {
-      reactAnimated
-        .sequence([
-          reactAnimated.timing(scale, {
-            toValue: 0.6,
-            duration: 500, // time to animation 2
-            useNativeDriver: true,
-          }),
-          reactAnimated.timing(scale, {
-            toValue: 10,
-            duration: 1000, // time to animation 3
-            useNativeDriver: true,
-          }),
-        ])
-        .start();
-    }, 3200);
+      // Start the progress animation
+      progress.value = withTiming(1, {duration: 3000});
 
-    setTimeout(() => {
-      navigation.navigate(SCREEN_NAME.Login);
-    }, 4500);
-  }, [progress]);
+      // Start the scale animations after progress animation is complete
+      setTimeout(() => {
+        reactAnimated
+          .sequence([
+            reactAnimated.timing(scale, {
+              toValue: 0.6,
+              duration: 500,
+              useNativeDriver: true,
+            }),
+            reactAnimated.timing(scale, {
+              toValue: 10,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ])
+          .start();
+      }, 3000);
 
-  // useEffect(() => {
-  //   progress.value = withTiming(currentTotalProgress / totalProgress, {
-  //     duration: 1000,
-  //   });
+      // Navigate after animations are done
+      setTimeout(() => {
+        // console.log(user, token);
+        if (!user || !token) {
+          navigation.navigate(SCREEN_NAME.Login);
+        } else {
+          navigation.navigate(SCREEN_NAME.HomeTabs, {
+            user: user,
+            token: token,
+          });
+        }
+      }, 4500);
+    };
 
-  //   if (currentTotalProgress / totalProgress === 1) {
-  //     setTimeout(() => {
-  //       reactAnimated
-  //         .sequence([
-  //           reactAnimated.timing(scale, {
-  //             toValue: 0.6,
-  //             duration: 500, // time to animation 2
-  //             useNativeDriver: true,
-  //           }),
-  //           reactAnimated.timing(scale, {
-  //             toValue: 10,
-  //             duration: 1000, // time to animation 3
-  //             useNativeDriver: true,
-  //           }),
-  //         ])
-  //         .start();
-  //     }, 1200);
-  //   }
-  // }, [totalProgress, currentTotalProgress]);
+    initialize();
+  }, [progress, navigation, scale]);
 
   const circleAnimatedProps = useAnimatedProps(() => ({
     strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
@@ -128,12 +124,6 @@ const SplashScreen = ({disableProgressText = false, navigation}) => {
           strokeWidth={15}
           fill={'none'}
         />
-        {/* <Circle
-          cx={WIDTH / 2}
-          cy={HEIGHT / 2}
-          r={(R * 85) / 100}
-          fill={colors.white}
-        /> */}
         <ReAnimatedCircle
           cx={WIDTH / 2}
           cy={HEIGHT / 2}

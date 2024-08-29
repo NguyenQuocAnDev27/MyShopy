@@ -31,6 +31,9 @@ import {SCREEN_NAME} from '../../navigation/AppNavigator';
 import LoadingScreen from '../../components/common/LoadingScreen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import MessageFullSreen from '../../components/common/MessageFullSreen';
+import {saveItem} from '../../services/SecureInfo';
+import {KEY_SECURE} from '../../services/SecureInfo';
+import useStore from '../../stores/store';
 
 const LogoContainer = ({
   assetPath = missingPart,
@@ -102,6 +105,7 @@ const CustomTextInput = ({assetPath, assetPathFocus, ...props}) => {
 const InputInfoLoginFieldContainer = ({navigation, funtions = null}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const saveUserDataToLocalStorage = useStore(state => state.login);
 
   const fakeFetchAPILogin_v2 = ({input_user, input_pw}) => {
     return new Promise((resolve, reject) => {
@@ -151,6 +155,10 @@ const InputInfoLoginFieldContainer = ({navigation, funtions = null}) => {
       })
       .catch(error => {
         console.log('Login Failed:', error);
+        funtions.loginFailed({
+          get_title: 'Đăng nhập thất bại',
+          get_content: `${error?.Exception?.Error}`,
+        });
         return error;
       });
 
@@ -164,7 +172,10 @@ const InputInfoLoginFieldContainer = ({navigation, funtions = null}) => {
       }
       return;
     }
-
+    saveUserDataToLocalStorage({
+      user: res?.Data?.User,
+      token: res?.Data?.JWTToken,
+    });
     navigation?.navigate(SCREEN_NAME.HomeTabs);
   };
 
@@ -358,9 +369,21 @@ const styles_ExtraLoginMethodsContainer = StyleSheet.create({
 
 const LoginScreen = ({navigation}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [showMessage, setShowMessage] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
   function toggleLoading() {
     setIsLoading(preValue => !preValue);
+  }
+  const [message, setMessage] = useState({
+    title: 'none',
+    content: 'none',
+    type: 0,
+  });
+  function resetMessage() {
+    setMessage({
+      title: 'none',
+      content: 'none',
+      type: 0,
+    });
   }
 
   // const {products, fetchProducts} = useStoreContext();
@@ -375,6 +398,15 @@ const LoginScreen = ({navigation}) => {
 
   const funtions = {
     toggleLoading: toggleLoading,
+    loginFailed: ({get_title, get_content}) => {
+      console.log(`Get - title ${get_title}`);
+      setShowMessage(true);
+      setMessage({
+        title: get_title,
+        content: get_content,
+        type: 2,
+      });
+    },
   };
 
   return (
@@ -387,7 +419,11 @@ const LoginScreen = ({navigation}) => {
             <MessageFullSreen
               onPressMessage={() => {
                 setShowMessage(false);
+                resetMessage();
               }}
+              title={message.title}
+              message={message.content}
+              type={message.type}
             />
           )}
           <Text style={styles.title}>ĐĂNG NHẬP</Text>
