@@ -165,7 +165,7 @@ const styles_ExtensionsList = StyleSheet.create({
   },
 });
 
-const Banners_Item = item => {
+const Banners_Item = ({item}) => {
   return (
     <View style={styles_Banners.item}>
       <Text style={styles_ExtensionsList.title}>{item.title}</Text>
@@ -183,7 +183,7 @@ const Banners = () => {
 
   const length = DATA.length();
 
-  return <View>{length * <Banners_Item />}</View>;
+  return <View>{DATA.map(({value}))}</View>;
 };
 
 const styles_Banners = StyleSheet.create({
