@@ -28,6 +28,12 @@ import fontSettings from '../../assets/fonts/fontSettings';
 import colors from '../../constants/colors';
 import LinearGradient from 'react-native-linear-gradient';
 import {SCREEN_NAME} from '../../navigation/AppNavigator';
+import LoadingScreen from '../../components/common/LoadingScreen';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+import MessageFullSreen from '../../components/common/MessageFullSreen';
+import {saveItem} from '../../services/SecureInfo';
+import {KEY_SECURE} from '../../services/SecureInfo';
+import useStore from '../../stores/store';
 
 const LogoContainer = ({
   assetPath = missingPart,
@@ -96,9 +102,10 @@ const CustomTextInput = ({assetPath, assetPathFocus, ...props}) => {
   );
 };
 
-const InputInfoLoginFieldContainer = ({navigation}) => {
+const InputInfoLoginFieldContainer = ({navigation, funtions = null}) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const saveUserDataToLocalStorage = useStore(state => state.login);
 
   const fakeFetchAPILogin_v2 = ({input_user, input_pw}) => {
     return new Promise((resolve, reject) => {
@@ -123,7 +130,7 @@ const InputInfoLoginFieldContainer = ({navigation}) => {
             Message: null,
             Exception: {
               Code: 100,
-              Message: 'Sai tài khoản hoặc mật khẩu',
+              Error: 'Sai tài khoản hoặc mật khẩu',
             },
             Data: null,
           });
@@ -133,18 +140,42 @@ const InputInfoLoginFieldContainer = ({navigation}) => {
   };
 
   const CheckLogin = async (input_user, input_pw) => {
+    if (funtions != null) {
+      funtions.toggleLoading();
+    }
+
     // Call API here
     const res = await fakeFetchAPILogin_v2({
       input_user: input_user,
       input_pw: input_pw,
-    });
+    })
+      .then(response => {
+        console.log('Login Success:', response);
+        return response;
+      })
+      .catch(error => {
+        console.log('Login Failed:', error);
+        funtions.loginFailed({
+          get_title: 'Đăng nhập thất bại',
+          get_content: `${error?.Exception?.Error}`,
+        });
+        return error;
+      });
 
     // Check status
     if (res?.Status === false || res?.Message === null) {
       // Message error
+
+      // Turn off Loading screen
+      if (funtions != null) {
+        funtions.toggleLoading();
+      }
       return;
     }
-
+    saveUserDataToLocalStorage({
+      user: res?.Data?.User,
+      token: res?.Data?.JWTToken,
+    });
     navigation?.navigate(SCREEN_NAME.HomeTabs);
   };
 
@@ -337,6 +368,24 @@ const styles_ExtraLoginMethodsContainer = StyleSheet.create({
 });
 
 const LoginScreen = ({navigation}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [showMessage, setShowMessage] = useState(false);
+  function toggleLoading() {
+    setIsLoading(preValue => !preValue);
+  }
+  const [message, setMessage] = useState({
+    title: 'none',
+    content: 'none',
+    type: 0,
+  });
+  function resetMessage() {
+    setMessage({
+      title: 'none',
+      content: 'none',
+      type: 0,
+    });
+  }
+
   // const {products, fetchProducts} = useStoreContext();
 
   // useEffect(() => {
@@ -347,17 +396,50 @@ const LoginScreen = ({navigation}) => {
     'Enter email/phone number/name user',
   );
 
+  const funtions = {
+    toggleLoading: toggleLoading,
+    loginFailed: ({get_title, get_content}) => {
+      console.log(`Get - title ${get_title}`);
+      setShowMessage(true);
+      setMessage({
+        title: get_title,
+        content: get_content,
+        type: 2,
+      });
+    },
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>ĐĂNG NHẬP</Text>
-      <View>
-        <View style={styles.logo_container}>
-          <Image source={app_logo} style={styles.app_logo} />
+    <SafeAreaProvider>
+      {isLoading ? (
+        <LoadingScreen />
+      ) : (
+        <View style={styles.container}>
+          {showMessage && (
+            <MessageFullSreen
+              onPressMessage={() => {
+                setShowMessage(false);
+                resetMessage();
+              }}
+              title={message.title}
+              message={message.content}
+              type={message.type}
+            />
+          )}
+          <Text style={styles.title}>ĐĂNG NHẬP</Text>
+          <View>
+            <View style={styles.logo_container}>
+              <Image source={app_logo} style={styles.app_logo} />
+            </View>
+            <InputInfoLoginFieldContainer
+              navigation={navigation}
+              funtions={funtions}
+            />
+            <ExtraLoginMethodsContainer navigation={navigation} />
+          </View>
         </View>
-        <InputInfoLoginFieldContainer navigation={navigation} />
-        <ExtraLoginMethodsContainer navigation={navigation} />
-      </View>
-    </View>
+      )}
+    </SafeAreaProvider>
   );
 };
 

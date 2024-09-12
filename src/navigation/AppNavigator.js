@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -22,6 +23,10 @@ import MailScreen from '../screens/MailScreen/MailScreen';
 import VideoScreen from '../screens/VideoScreen/VideoScreen';
 import UserExtensionsScreen from '../screens/UserExtensionsScreen/UserExtensionsScreen';
 import NotificationsScreen from '../screens/NotificationsScreen/NotificationsScreen';
+import SplashScreen from '../components/common/SplashScreen';
+import useStore from '../stores/store';
+import {getItem} from '../services/SecureInfo';
+import {AuthProvider} from '../components/common/AuthContext';
 
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
@@ -35,6 +40,7 @@ const SCREEN_NAME = {
   Video: 'Live & Video',
   UserExtensions: 'Tôi',
   Notifications: 'Thông báo',
+  Splash: 'Splash',
 };
 
 // TabBarIcon Component
@@ -76,37 +82,51 @@ const screenOptions = ({route}) => ({
   headerShown: false, // Hide the header
 });
 
-const HomeTabs = () => {
+const HomeTabs = ({route}) => {
+  const {user, token} = route.params;
+
   return (
-    <Tab.Navigator
-      initialRouteName={SCREEN_NAME.Login}
-      screenOptions={screenOptions}>
-      <Tab.Screen name={SCREEN_NAME.Home} component={HomeScreen} />
-      <Tab.Screen name={SCREEN_NAME.Mail} component={MailScreen} />
-      <Tab.Screen name={SCREEN_NAME.Video} component={VideoScreen} />
-      <Tab.Screen
-        name={SCREEN_NAME.Notifications}
-        component={NotificationsScreen}
-      />
-      <Tab.Screen
-        name={SCREEN_NAME.UserExtensions}
-        component={UserExtensionsScreen}
-      />
-    </Tab.Navigator>
+    <AuthProvider user={user} token={token}>
+      <Tab.Navigator
+        initialRouteName={SCREEN_NAME.Login}
+        screenOptions={screenOptions}>
+        <Tab.Screen name={SCREEN_NAME.Home} component={HomeScreen} />
+        <Tab.Screen name={SCREEN_NAME.Mail} component={MailScreen} />
+        <Tab.Screen name={SCREEN_NAME.Video} component={VideoScreen} />
+        <Tab.Screen
+          name={SCREEN_NAME.Notifications}
+          component={NotificationsScreen}
+        />
+        <Tab.Screen
+          name={SCREEN_NAME.UserExtensions}
+          component={UserExtensionsScreen}
+        />
+      </Tab.Navigator>
+    </AuthProvider>
   );
 };
 
+const forFade = ({current}) => ({
+  cardStyle: {
+    opacity: current.progress,
+  },
+});
+
 const AppNavigator = () => {
+  // const isLoading = useStore(state => state.isLoading);
+  // const toggleLoading = useStore(state => state.toggleLoading);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={SCREEN_NAME.Login}
+        initialRouteName={SCREEN_NAME.Splash}
         screenOptions={screenOptions}>
+        <Stack.Screen name={SCREEN_NAME.Splash} component={SplashScreen} />
         <Stack.Screen name={SCREEN_NAME.HomeTabs} component={HomeTabs} />
         <Stack.Screen
           name={SCREEN_NAME.Login}
           component={LoginScreen}
-          options={{headerBackVisible: false}}
+          options={{headerBackVisible: false, cardStyleInterpolator: forFade}}
         />
       </Stack.Navigator>
     </NavigationContainer>

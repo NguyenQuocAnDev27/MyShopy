@@ -14,6 +14,10 @@ import Animated, {
 import fontSettings from '../../assets/fonts/fontSettings';
 import {ReText} from 'react-native-redash';
 import {Animated as reactAnimated} from 'react-native';
+import {SCREEN_NAME} from '../../navigation/AppNavigator';
+import {getItem} from '../../services/SecureInfo';
+import {KEY_SECURE} from '../../services/SecureInfo';
+import useStore from '../../stores/store';
 
 const {width, height} = Dimensions.get('screen');
 const statusBarHeight = StatusBar.currentHeight;
@@ -28,39 +32,81 @@ const CIRCLE_LENGTH = 600;
 const R = CIRCLE_LENGTH / (2 * Math.PI);
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
+const ReAnimatedCircle = reactAnimated.createAnimatedComponent(Circle);
 
-const LoadingScreen = ({}) => {
-  const progress = useSharedValue(0);
-  const progress2 = useSharedValue(0);
-  const [currentProgress, setCurrentProgress] = useState(false);
+const AnimatedReText = ({text, delaytime = 3000}) => {
+  const opacity = useSharedValue(1);
 
-  const duration = 2000;
+  // Animated style for ReText
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: opacity.value,
+    };
+  });
+
   useEffect(() => {
-    if (!currentProgress) {
-      progress.value = withTiming(1, {
-        duration: duration,
-      });
-      setTimeout(() => {
-        setCurrentProgress(true);
-        progress2.value = 0;
-      }, duration + 100);
-    } else {
-      progress2.value = withTiming(1, {
-        duration: duration,
-      });
-      setTimeout(() => {
-        setCurrentProgress(false);
-        progress.value = 0;
-      }, duration + 100);
-    }
-  }, [currentProgress]);
+    // Trigger the opacity animation from 1 to 0
+    setTimeout(() => {
+      opacity.value = withTiming(0, {duration: 500});
+    }, delaytime + 500);
+  }, [opacity]);
 
-  const animatedProps = useAnimatedProps(() => ({
+  return (
+    <Animated.View style={animatedStyle}>
+      <ReText style={styles.progressText} text={text} />
+    </Animated.View>
+  );
+};
+
+const SplashScreen = ({disableProgressText = false, navigation}) => {
+  const progress = useSharedValue(0);
+  const scale = useRef(new reactAnimated.Value(1)).current;
+  const getUserLocalData = useStore(state => state.getUserLocalData);
+
+  useEffect(() => {
+    const initialize = async () => {
+      const {user, token} = await getUserLocalData();
+
+      // Start the progress animation
+      progress.value = withTiming(1, {duration: 3000});
+
+      // Start the scale animations after progress animation is complete
+      setTimeout(() => {
+        reactAnimated
+          .sequence([
+            reactAnimated.timing(scale, {
+              toValue: 0.6,
+              duration: 500,
+              useNativeDriver: true,
+            }),
+            reactAnimated.timing(scale, {
+              toValue: 10,
+              duration: 1000,
+              useNativeDriver: true,
+            }),
+          ])
+          .start();
+      }, 3000);
+
+      // Navigate after animations are done
+      setTimeout(() => {
+        // console.log(user, token);
+        if (!user || !token) {
+          navigation.navigate(SCREEN_NAME.Login);
+        } else {
+          navigation.navigate(SCREEN_NAME.HomeTabs, {
+            user: user,
+            token: token,
+          });
+        }
+      }, 4500);
+    };
+
+    initialize();
+  }, [progress, navigation, scale]);
+
+  const circleAnimatedProps = useAnimatedProps(() => ({
     strokeDashoffset: CIRCLE_LENGTH * (1 - progress.value),
-  }));
-
-  const animatedProps2 = useAnimatedProps(() => ({
-    strokeDashoffset: CIRCLE_LENGTH * (1 - progress2.value),
   }));
 
   const progressText = useDerivedValue(() => {
@@ -78,13 +124,7 @@ const LoadingScreen = ({}) => {
           strokeWidth={15}
           fill={'none'}
         />
-        <Circle
-          cx={WIDTH / 2}
-          cy={HEIGHT / 2}
-          r={(R * 85) / 100}
-          fill={colors.white}
-        />
-        {/* <ReAnimatedCircle
+        <ReAnimatedCircle
           cx={WIDTH / 2}
           cy={HEIGHT / 2}
           r={scale.interpolate({
@@ -94,7 +134,7 @@ const LoadingScreen = ({}) => {
           fill={colors.white}
           scaleX={scale}
           scaleY={scale}
-        /> */}
+        />
         <AnimatedCircle
           cx={WIDTH / 2}
           cy={HEIGHT / 2}
@@ -103,23 +143,13 @@ const LoadingScreen = ({}) => {
           strokeWidth={15}
           fill={'none'}
           strokeDasharray={CIRCLE_LENGTH}
-          animatedProps={animatedProps}
+          animatedProps={circleAnimatedProps}
           strokeLinecap={'round'}
         />
-        {currentProgress && (
-          <AnimatedCircle
-            cx={WIDTH / 2}
-            cy={HEIGHT / 2}
-            r={R}
-            stroke={colors.darkOrange}
-            strokeWidth={15}
-            fill={'none'}
-            strokeDasharray={CIRCLE_LENGTH}
-            animatedProps={animatedProps2}
-            strokeLinecap={'round'}
-          />
-        )}
       </Svg>
+      {!disableProgressText && (
+        <AnimatedReText text={progressText} delaytime={3000} />
+      )}
     </View>
   );
 };
@@ -144,4 +174,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoadingScreen;
+export default SplashScreen;

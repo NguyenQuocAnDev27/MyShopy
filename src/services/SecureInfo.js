@@ -1,7 +1,7 @@
 import * as Keychain from 'react-native-keychain';
 
 // Dictionary to store key names
-const SecureKeys = {
+const KEY_SECURE = {
   USERNAME: 'username',
   PASSWORDHASH: 'passwordhash',
   TOKEN: 'token',
@@ -56,4 +56,4 @@ async function deleteItem(key) {
 }
 
 // Export the functions and the dictionary
-export {SecureKeys, saveItem, getItem, deleteItem};
+export {KEY_SECURE, saveItem, getItem, deleteItem};

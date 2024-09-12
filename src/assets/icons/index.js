@@ -18,6 +18,16 @@ const sms = require('./chat_message_sent_480px.png');
 const google = require('./google_512px.png');
 const facebook = require('./Facebook_512px.png');
 const appleid = require('./apple_logo_208px.png');
+const warning = require('./error_500px.png');
+const error = require('./error_512px.png');
+const info = require('./info_480px.png');
+const search = require('./SearchIcon.png');
+const camera = require('./camera_208px.png');
+const message = require('./speech_480px.png');
+const cart = require('./Cart.png');
+const scan = require('./scan_512px.png');
+const wallet = require('./wallet_512px.png');
+const coin = require('./us_dollar_circled_500px.png');
 
 export {
   likeInactive,
@@ -40,4 +50,14 @@ export {
   appleid,
   password_focus,
   user_focus,
+  warning,
+  error,
+  info,
+  search,
+  camera,
+  message,
+  cart,
+  scan,
+  wallet,
+  coin,
 };
