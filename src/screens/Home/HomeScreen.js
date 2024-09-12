@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -10,6 +10,8 @@ import {
   StatusBar,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  Animated,
 } from 'react-native';
 import {useStoreContext} from '../../stores';
 import {useAuth} from '../../components/common/AuthContext';
@@ -33,6 +35,171 @@ const HEIGHT = height - statusBarHeight * 1.5;
 const topExtensionsContainerWidth = 65;
 const searchBarItemPadding = 10;
 const searchIconSize = 25;
+
+const ExtensionsListHorizotal = () => {
+  const [completeScrollBarWidth, setCompleteScrollBarWidth] = useState(1);
+  const [visibleScrollBarWidth, setVisibleScrollBarWidth] = useState(0);
+  const scrollIndicatorSize =
+    completeScrollBarWidth > visibleScrollBarWidth
+      ? (visibleScrollBarWidth * visibleScrollBarWidth) / completeScrollBarWidth
+      : visibleScrollBarWidth;
+  const scrollIndicator = useRef(new Animated.Value(0)).current;
+  const difference =
+    visibleScrollBarWidth > scrollIndicatorSize
+      ? ((visibleScrollBarWidth - scrollIndicatorSize) * 50) / WIDTH
+      : 1;
+
+  const scrollIndicatorPosition = Animated.multiply(
+    scrollIndicator,
+    visibleScrollBarWidth / completeScrollBarWidth,
+  ).interpolate({
+    inputRange: [0, difference],
+    outputRange: [0, difference],
+    extrapolate: 'clamp',
+  });
+  const paddingScrollView = (WIDTH - 50) / 2;
+  const DATA = [
+    {id: '1', title: 'First Item'},
+    {id: '2', title: 'Second Item'},
+    {id: '3', title: 'Third Item'},
+    {id: '4', title: 'A Item'},
+    {id: '5', title: 'B Item'},
+    {id: '6', title: 'C Item'},
+    {id: '7', title: 'D Item'},
+    {id: '8', title: 'E Item'},
+    // Add more items as needed
+  ];
+
+  const renderItem = ({item}) => {
+    return (
+      <View style={styles_ExtensionsList.item}>
+        <Text style={styles_ExtensionsList.title}>{item.title}</Text>
+      </View>
+    );
+  };
+
+  return (
+    <>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        // eslint-disable-next-line react-native/no-inline-styles
+        contentContainerStyle={{paddingRight: 14}}
+        showsVerticalScrollIndicator={false}
+        onContentSizeChange={scrollWidth => {
+          setCompleteScrollBarWidth(scrollWidth);
+        }}
+        onLayout={({
+          nativeEvent: {
+            // eslint-disable-next-line no-shadow
+            layout: {width},
+          },
+        }) => {
+          setVisibleScrollBarWidth(width);
+        }}
+        onScroll={Animated.event(
+          [{nativeEvent: {contentOffset: {x: scrollIndicator}}}],
+          {useNativeDriver: false},
+        )}
+        scrollEventThrottle={16}>
+        <FlatList
+          data={DATA}
+          renderItem={renderItem}
+          keyExtractor={item => item.id}
+          showsHorizontalScrollIndicator={false}
+          numColumns={Math.ceil(DATA.length / 2)}
+          columnWrapperStyle={styles_ExtensionsList.row}
+        />
+      </ScrollView>
+      <View
+        style={{
+          ...styles_ExtensionsList.scrollbarContainer,
+          paddingHorizontal: paddingScrollView,
+        }}>
+        <View style={styles_ExtensionsList.scrollbar}>
+          <Animated.View
+            style={{
+              ...styles_ExtensionsList.visableScrollbar,
+              width: (scrollIndicatorSize * 50) / WIDTH,
+              transform: [{translateX: scrollIndicatorPosition}],
+            }}
+          />
+        </View>
+      </View>
+    </>
+  );
+};
+
+const styles_ExtensionsList = StyleSheet.create({
+  item: {
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    margin: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+  row: {
+    justifyContent: 'space-between', // Optional: space items evenly in each row
+  },
+  scrollbarContainer: {
+    width: '100%',
+    height: 6,
+    flexDirection: 'column',
+    // alignItems: 'center',
+  },
+  scrollbar: {
+    width: '100%',
+    height: 6,
+    backgroundColor: '#52057b',
+    borderRadius: 8,
+  },
+  visableScrollbar: {
+    height: 6,
+    borderRadius: 8,
+    backgroundColor: '#bc6ff1',
+  },
+});
+
+const Banners_Item = item => {
+  return (
+    <View style={styles_Banners.item}>
+      <Text style={styles_ExtensionsList.title}>{item.title}</Text>
+    </View>
+  );
+};
+
+const Banners = () => {
+  const DATA = [
+    {id: '1', title: 'Banner 1'},
+    {id: '2', title: 'Banner 2'},
+    {id: '3', title: 'Banner 3'},
+    // Add more items as needed
+  ];
+
+  const length = DATA.length();
+
+  return <View>{length * <Banners_Item />}</View>;
+};
+
+const styles_Banners = StyleSheet.create({
+  list: {
+    padding: 0,
+  },
+  item: {
+    width: (WIDTH - (20 + 10) * 3) / 3,
+    backgroundColor: '#f9c2ff',
+    padding: 20,
+    margin: 10,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+});
 
 const HomeScreen = () => {
   const {user, token} = useAuth();
@@ -184,10 +351,10 @@ const HomeScreen = () => {
 
         <View style={{marginTop: 40, backgroundColor: colors.error}}>
           <View>
-            <Text>Extensions</Text>
+            <ExtensionsListHorizotal />
           </View>
           <View>
-            <Text>Banners</Text>
+            <Banners />
           </View>
         </View>
       </View>
